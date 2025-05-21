@@ -8,11 +8,13 @@ from transitions import Machine
 
 class ModeManager:
     """
+    GS modified +0.5
     A unified ModeManager for Quadify that includes:
       - Display-mode persistence (original/modern)
       - Screensaver & idle logic
       - Additional states for Tidal/Qobuz/Radio/Playlists
       - Possibly a 'boot' or 'systeminfo' state if desired
+      – GS added smooth AirPlay switching. This version removes Clock as a background thread
     """
 
     states = [
@@ -376,7 +378,7 @@ class ModeManager:
     def stop_all_screens(self):
         self.logger.debug("ModeManager: stop_all_screens called.")
         if self.clock:
-            self.clock.stop()
+            self.clock.stop_mode()
         if self.screensaver:
             self.screensaver.stop_screensaver()
         if self.screensaver_menu and self.screensaver_menu.is_active:
@@ -417,8 +419,6 @@ class ModeManager:
             self.minimal_screen.stop_mode()
         if self.webradio_screen and self.webradio_screen.is_active:
             self.webradio_screen.stop_mode()
-        if self.airplay_screen and self.airplay_screen.is_active:
-            self.airplay_screen.stop_mode()
         if self.webradio_screen and self.webradio_screen.is_active:
             self.webradio_screen.stop_mode()
         if self.system_info_screen and self.system_info_screen.is_active:
@@ -434,17 +434,22 @@ class ModeManager:
         self.current_screen = self.airplay_screen
         self.airplay_screen.start_mode()
 
-
     def enter_boot(self, event):
         self.logger.info("ModeManager: Entering 'boot' state.")
         self.stop_all_screens()
 
     def enter_clock(self, event):
+        if self.get_mode() == "airplay":
+            self.logger.info("Skip clock — in AirPlay")
+            return
+        if getattr(self, "_disable_clock", False):
+            self.logger.info("Clock disabled — skipping start.")
+            return        
         self.logger.info("ModeManager: Entering 'clock' mode.")
         self.stop_all_screens()
         if self.clock:
             self.clock.config = self.config
-            self.clock.start()
+            self.clock.start_mode() # GS NEW – start_mode called in display.screens.clock
             self.logger.info("ModeManager: Clock started.")
         else:
             self.logger.warning("ModeManager: No Clock instance.")
@@ -679,7 +684,12 @@ class ModeManager:
 
     def enter_airplay(self, event):
         self.logger.info("ModeManager: Entering 'airplay' state.")
+        self._disable_clock = True
+        self._cancel_pause_timer()  # cancel pending clock fallback
         self.stop_all_screens()
+        self.logger.debug("stop_all_screens called in enter_airplay")
+        if self.clock:
+            self.clock.stop_mode() # GS NEW – stop_mode called in display.screens.clock
         if self.airplay_screen:
             self.airplay_screen.start_mode()
             self.logger.info("ModeManager: AirPlayScreen started.")
@@ -735,15 +745,25 @@ class ModeManager:
     def _handle_playback_states(self, status, service, state_data):
         now = time.time()
         desired_mode = self.config.get("display_mode", "original")
+
+        # GS New AirPlay mode handling, forcing Clock to stop when switching into AirPlay
+        if self.get_mode() == "airplay":
+            self.logger.debug("AirPlay is active — blocking fallback to other modes.")
+            if self.clock and self.clock.is_active:
+                self.logger.info("AirPlay active — force-stopping lingering Clock.")
+                self.clock.stop_mode() # GS stop_mode called in display.screens.clock
+            return
             
         # Skip rapid mode switches
         if (now - self.last_mode_change_time) < self.min_mode_switch_interval:
             self.logger.debug("ModeManager: Skipping a rapid mode switch due to cooldown.")
             return
-
-        # For AirPlay, simply ignore state changes so we remain in clock mode.
+            
+        # GS AirPlay override block
         if service in ["airplay", "airplay_emulation"]:
-            self.logger.debug("AirPlay service detected; ignoring state update and remaining in clock mode.")
+            self.to_airplay()
+            self.last_mode_change_time = now
+            self.logger.debug("AirPlay service detected, switching to Airplay mode")
             return
 
         # Normal handling for non-AirPlay services:
@@ -798,9 +818,13 @@ class ModeManager:
 
     def switch_to_clock_if_still_stopped_or_paused(self):
         with self.lock:
+            current_mode = self.get_mode()
             if self.current_status in ["pause", "stop"]:
-                self.to_clock()
-                self.logger.debug("ModeManager: Reverted to clock after pause/stop timer.")
+                if current_mode != "airplay":
+                    self.to_clock()
+                    self.logger.debug("ModeManager: Reverted to clock after pause/stop timer.")
+                else:
+                    self.logger.debug("ModeManager: In 'airplay' mode; skipping revert to clock.")
             else:
                 self.logger.debug("Playback resumed or changed; staying in current mode.")
             self.pause_stop_timer = None
@@ -815,7 +839,7 @@ class ModeManager:
     def toggle_play_pause(self):
         current_mode = self.get_mode()
         self.logger.debug("toggle_play_pause: Current mode before toggling: %s", current_mode)
-        if current_mode in ['clock', 'original', 'modern', 'minimal', 'webradio', 'airplay']:
+        if current_mode in ['clock', 'original', 'modern', 'minimal', 'webradio']:
             if current_mode == 'clock':
                 # Now that Clock implements toggle_play_pause, use it directly.
                 if hasattr(self.clock, "toggle_play_pause"):
@@ -830,8 +854,8 @@ class ModeManager:
                 self.minimal_screen.toggle_play_pause()
             elif current_mode == 'webradio' and self.webradio_screen:
                 self.webradio_screen.toggle_play_pause()
-            elif current_mode == 'airplay' and self.webradio_screen:
-                self.airplay_screen.toggle_play_pause()
+#             elif current_mode == 'airplay' and self.airplay_screen:
+#                 self.airplay_screen.toggle_play_pause()
             else:
                 self.logger.warning(f"No screen available to toggle play/pause in mode: {current_mode}")
         else:
@@ -864,8 +888,9 @@ class ModeManager:
                 "spotify": self.to_spotify,
                 "webradio": self.to_webradio,
                 "airplay": self.to_airplay,
-                "motherearth": self.to_motherearth,
-                "radioparadise": self.radioparadise,
+#                motherearth and radioparadise causing errors?
+#                "motherearth": self.to_motherearth,
+#                "radioparadise": self.radioparadise,
                 "systeminfo": self.to_systeminfo,
                 "systemupdate": self.to_systemupdate,
                 "boot": self.to_boot
@@ -877,6 +902,6 @@ class ModeManager:
                 self.to_clock()
         else:
             self.logger.info("Navigation stack empty, cannot go back.")
-
+            self.to_clock() # GS The stack is empty, and we can't go back, but we know the user wants to go to clock.
     def get_mode(self):
         return self.state
