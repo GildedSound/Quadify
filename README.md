@@ -17,7 +17,7 @@ Assuming a fresh boot, and we’re sitting at clock…
 
 – Disconnecting device takes you to a stripped back layout, with “Info Not Available” displayed. User can either: use Volumio UI to change modes, or long press the button to go back to clock. Mode switching from here should be normal.
 
-AIRPLAY APPEARANCE: 
+## AIRPLAY APPEARANCE: 
 
 – Metadata now dynamically updates AND scrolls if the length of title and or artist are longer than the width of the white dividing line. I may adjust the speed of them, title slower than artist.
 
@@ -39,6 +39,7 @@ AIRPLAY APPEARANCE:
 
 – iOS offers much more stable metadata handling across all its apps. When transmitting global audio from a macOS device, sometimes no metadata is available. For example, using Spotify from your desktop produces no title or artist information, but it does from iOS device. Apple Music works fine. TBC
 
+# Original release notes below
 
 # Main Quadify Repository Overview
 This repository is a comprehensive guide and toolkit for integrating Quadify audio hardware enhancements into Raspberry Pi audio systems, initially developed by Audiophonics and subsequently enhanced by the Quadify team.
