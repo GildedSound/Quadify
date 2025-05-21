@@ -15,7 +15,7 @@ Assuming a fresh boot, and we’re sitting at clock…
 
 – Switching between AirPlay apps on the controlling device is seamless.  
 
-– Disconnecting device takes you to a stripped back layout, with “Info Not Available” displayed. User can either: use Volumio UI to change modes, or long press the button to go back to clock. Mode switching from here should be normal.
+– Disconnecting device takes you to a stripped back layout, with “No Info Available” displayed. User can either: use Volumio UI to change modes, or long press the button to go back to clock. Mode switching from here should be normal.
 
 ## AIRPLAY APPEARANCE: 
 
