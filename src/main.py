@@ -14,8 +14,19 @@ import os
 import sys
 from PIL import Image, ImageSequence
 
+# GS Added debug log output, resets on each Quadify restart 
+logging.basicConfig(
+    level=logging.DEBUG,
+    filename="/tmp/quadify_debug.log",  # or another writeable path
+    filemode="w",
+    format="%(asctime)s [%(levelname)s] %(message)s"
+)
+
+logging.debug("Quadify main.py starting up")
+
+# Continue importing scripts
 from display.screens.clock import Clock
-from hardware.buttonsleds import ButtonsLEDController
+# from hardware.buttonsleds import ButtonsLEDController # GS Button matrix fully disabled for testing purposes / clean logs
 from hardware.shutdown_system import shutdown_system
 from display.screens.original_screen import OriginalScreen
 from display.screens.modern_screen import ModernScreen
@@ -25,12 +36,12 @@ from display.screensavers.snake_screensaver import SnakeScreensaver
 from display.screensavers.geo_screensaver import GeoScreensaver
 from display.screensavers.bouncing_text_screensaver import BouncingTextScreensaver
 from display.display_manager import DisplayManager
-from display.screens.clock import Clock
 from managers.menu_manager import MenuManager
 from managers.mode_manager import ModeManager
 from managers.manager_factory import ManagerFactory
 from controls.rotary_control import RotaryControl
 from network.volumio_listener import VolumioListener
+from display.screens.clock import Clock
 
 def load_config(config_path='/config.yaml'):
     abs_path = os.path.abspath(config_path)
@@ -168,9 +179,9 @@ def main():
     mode_manager.trigger("to_clock")
     logger.info("Forced system into 'clock' mode after all initialization.")
 
-    # 12) ButtonsLEDs
-    buttons_leds = ButtonsLEDController(config_path=config_path)
-    buttons_leds.start()
+#     # 12) ButtonsLEDs – GS Button Matrix fully disabled for clean logs
+#     buttons_leds = ButtonsLEDController(config_path=config_path)
+#     buttons_leds.start()
 
     # 13) Define RotaryControl callbacks
     def on_rotate(direction):
@@ -228,62 +239,66 @@ def main():
         else:
             logger.warning(f"Unhandled mode: {current_mode}; no rotary action performed.")
 
+    # IMPROVED SHORT PRESS LOGIC
     def on_button_press_inner():
-        current_mode = mode_manager.get_mode()
-        if current_mode == 'clock':
+        try:
+            current_mode = mode_manager.get_mode()
+            logger.debug(f"Button press in mode: {current_mode}")
             # Use trigger to go to menu
-            mode_manager.trigger("to_menu")
-        elif current_mode == 'menu':
-            mode_manager.menu_manager.select_item()
-        elif current_mode == 'configmenu':
-            mode_manager.config_menu.select_item()
-        elif current_mode == 'remotemenu':
-            mode_manager.remote_menu.select_item()
-        elif current_mode == 'systemupdate':
-            mode_manager.system_update_menu.select_item()
-        elif current_mode == 'screensavermenu':
-            mode_manager.screensaver_menu.select_item()
-        elif current_mode == 'displaymenu':
-            mode_manager.display_menu.select_item()
-        elif current_mode == 'clockmenu':
-            mode_manager.clock_menu.select_item()
-        elif current_mode in ['original', 'modern', 'minimal']:
-            logger.info(f"Button pressed in {current_mode} mode; toggling playback.")
-            if current_mode == 'original':
-                screen = mode_manager.original_screen
-            elif current_mode == 'modern':
-                screen = mode_manager.modern_screen
-            elif current_mode == 'minimal':
-                screen = mode_manager.minimal_screen
+            if current_mode == 'clock':
+                mode_manager.trigger("to_menu")
+            elif current_mode == 'menu':
+                mode_manager.menu_manager.select_item()
+            elif current_mode == 'configmenu':
+                mode_manager.config_menu.select_item()
+            elif current_mode == 'remotemenu':
+                mode_manager.remote_menu.select_item()
+            elif current_mode == 'systemupdate':
+                mode_manager.system_update_menu.select_item()
+            elif current_mode == 'screensavermenu':
+                mode_manager.screensaver_menu.select_item()
+            elif current_mode == 'displaymenu':
+                mode_manager.display_menu.select_item()
+            elif current_mode == 'clockmenu':
+                mode_manager.clock_menu.select_item()
+            elif current_mode in ['original', 'modern', 'minimal']:
+                logger.info(f"Button pressed in {current_mode}; toggling playback.")
+                screen = {
+                    'original': mode_manager.original_screen,
+                    'modern': mode_manager.modern_screen,
+                    'minimal': mode_manager.minimal_screen
+                }.get(current_mode)
+                if screen:
+                    screen.toggle_play_pause()
+                else:
+                    logger.warning(f"No screen instance found for mode: {current_mode}")
+            elif current_mode == 'playlists':
+                mode_manager.playlist_manager.select_item()
+            elif current_mode == 'tidal':
+                mode_manager.tidal_manager.select_item()
+            elif current_mode == 'qobuz':
+                mode_manager.qobuz_manager.select_item()
+            elif current_mode == 'spotify':
+                mode_manager.spotify_manager.select_item()
+            elif current_mode == 'library':
+                mode_manager.library_manager.select_item()
+            elif current_mode == 'radiomanager':
+                mode_manager.radio_manager.select_item()
+            elif current_mode == 'motherearthradio':
+                mode_manager.motherearth_manager.select_item()
+            elif current_mode == 'radioparadise':
+                mode_manager.radioparadise_manager.select_item()
+            elif current_mode == 'usblibrary':
+                mode_manager.usb_library_manager.select_item()
+            elif current_mode == 'screensaver':
+                mode_manager.exit_screensaver()
             else:
-                screen = None
-            if screen:
-                screen.toggle_play_pause()
-            else:
-                logger.warning(f"No screen instance found for mode: {current_mode}")
-        elif current_mode == 'playlists':
-            mode_manager.playlist_manager.select_item()
-        elif current_mode == 'tidal':
-            mode_manager.tidal_manager.select_item()
-        elif current_mode == 'qobuz':
-            mode_manager.qobuz_manager.select_item()
-        elif current_mode == 'spotify':
-            mode_manager.spotify_manager.select_item()
-        elif current_mode == 'library':
-            mode_manager.library_manager.select_item()
-        elif current_mode == 'radiomanager':
-            mode_manager.radio_manager.select_item()
-        elif current_mode == 'motherearthradio':
-            mode_manager.motherearth_manager.select_item()
-        elif current_mode == 'radioparadise':
-            mode_manager.radioparadise_manager.select_item()
-        elif current_mode == 'usblibrary':
-            mode_manager.usb_library_manager.select_item()
-        elif current_mode == 'screensaver':
-            mode_manager.exit_screensaver()
-        else:
-            logger.warning(f"Unhandled mode: {current_mode}; no button action performed.")
+                logger.warning(f"Unhandled mode in button press: {current_mode}")
+        except Exception as e:
+            logger.exception("Exception in on_button_press_inner")
 
+
+    # GS Matt improved long press logic
     def on_long_press():
         logger.info("Long button press detected.")
         current_mode = mode_manager.get_mode()
@@ -300,7 +315,7 @@ def main():
         rotation_callback     = on_rotate,
         button_callback       = on_button_press_inner,
         long_press_callback   = on_long_press,
-        long_press_threshold  = 2.5
+        long_press_threshold  = 2
     )
 
     threading.Thread(target=rotary_control.start, daemon=True).start()
@@ -465,9 +480,10 @@ def main():
 
 
 
-    # 15) Main application loop
+    # 15) Main application loop (GS Added clock.tick to keep track of time)
     try:
         while True:
+            mode_manager.clock.tick() 
             time.sleep(1)
     except KeyboardInterrupt:
         logger.info("Shutting down Quadify via KeyboardInterrupt.")
