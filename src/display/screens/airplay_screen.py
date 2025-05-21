@@ -17,7 +17,7 @@ class AirPlayScreen:
       - Service info (e.g. “AirPlay Mode”) and quality info (e.g. bitdepth/samplerate)
       – Instead of trying to download album art (which for AirPlay is not valid), it uses
         a static AirPlay icon (preloaded in DisplayManager, user changable via upload).
-      – GS Added a black box that acts as a margin between icon and text scrolling (cheeky workaround)        
+      – GS Added a black box that acts as a margin between icon and text scrolling (cheeky workaround)     
     """
     def __init__(self, display_manager, volumio_listener, mode_manager):
         self.logger = logging.getLogger(self.__class__.__name__)
@@ -57,9 +57,6 @@ class AirPlayScreen:
         # For repeated-update suppression, track the last state (and timestamp)
         self.last_state = None
 
-    # ------------------------------------------------------------------
-    # Volumio State Change
-    # ------------------------------------------------------------------   
     def on_volumio_state_change(self, sender, state):
         """
         Update display only if active and if the service indicates AirPlay.
@@ -94,9 +91,6 @@ class AirPlayScreen:
             self.latest_state = state.copy()
         self.update_event.set()
 
-    # ------------------------------------------------------------------
-    # Background Update Loop
-    # ------------------------------------------------------------------   
     def update_display_loop(self):
         """Wait for state updates (or timeout) and then redraw the screen."""
         while not self.stop_event.is_set():
@@ -108,10 +102,7 @@ class AirPlayScreen:
                     self.update_event.clear()
             if self.is_active and self.mode_manager.get_mode() == "airplay" and self.current_state:
                 self.draw_display(self.current_state)
-
-    # ------------------------------------------------------------------
-    # Start/Stop
-    # ------------------------------------------------------------------                
+                
     def start_mode(self):
         if self.mode_manager.get_mode() != "airplay":
             self.logger.warning("AirPlayScreen: Mode is not 'airplay'; forcing start anyway.")
@@ -177,7 +168,6 @@ class AirPlayScreen:
          - A horizontal separator line
          - Service info (or stream) and quality info (bitdepth/samplerate)
          - Instead of album art, use the preloaded 'airplay' icon.
-         – GS A black box that acts as a margin between icon and text scrolling (workaround)
         """
         base_image = Image.new("RGB", self.display_manager.oled.size, "black")
         draw = ImageDraw.Draw(base_image)
@@ -185,8 +175,7 @@ class AirPlayScreen:
 
         screen_width, screen_height = self.display_manager.oled.size
 
-        # GS Extract data values with fallbacks.
-
+        # Extract data values with fallbacks.
         title = data.get("title", "AirPlay")
         # GS 'No Info' fallback seems appropriate since it is either missing (audio filename only) or Airplay is not streaming
         artist = data.get("artist") or "No Info Available" 
@@ -200,7 +189,7 @@ class AirPlayScreen:
         service_y = divider_y + 3 
         quality_y = divider_y + 15
 
-        scrollable_width = screen_width - 75  # GS Define space to the right to begin scroll looping
+        scrollable_width = screen_width - 75  # Reserve space for 60px icon on the right
 
         # GS Draw Experimental Scrolling from long metadata
         self.scroll_offset_title, _ = self.scroll_text_simple(
@@ -216,7 +205,7 @@ class AirPlayScreen:
         line_end_x = screen_width - margin - icon_width - gap
         draw.line((margin, divider_y, line_end_x, divider_y), fill="white")
 
-        # Draw service and quality info. GS instead of reading service, simply print 'Airplay Mode'
+        # Draw service and quality info.
         draw.text((margin, service_y), "AirPlay Mode", font=self.font_small, fill="white")
         draw.text((margin, quality_y), quality, font=self.font_label, fill="white")
 
@@ -229,7 +218,7 @@ class AirPlayScreen:
             art_y = margin
             base_image.paste(airplay_icon, (art_x, art_y))
             
-        # GS Draw a 15x64 black box to the left of the icon to hide scrolling text (cheeky workaround)
+        # GS Draw a 15x64 black box to the left of the icon to hide scrolling text (workaround)
         box_width = 15
         box_height = 64
         box_x = art_x - box_width  # Position to the immediate left of the icon
