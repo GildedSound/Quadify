@@ -13,7 +13,9 @@ Assuming a fresh boot, and we’re sitting at clock…
 
 – if an AirPlay device connects, but nothing is playing, clock remains. But the moment you press ‘play’ on your iOS device, it will update the display and enter AirPlay mode and airplay_screen.py
 
-– Switching between AirPlay apps on the controlling device is seamless.  – Disconnecting device takes you to a stripped back layout, with “Info Not Available” displayed. User can either: use Volumio UI to change modes, or long press the button to go back to clock. Mode switching from here should be normal.
+– Switching between AirPlay apps on the controlling device is seamless.  
+
+– Disconnecting device takes you to a stripped back layout, with “Info Not Available” displayed. User can either: use Volumio UI to change modes, or long press the button to go back to clock. Mode switching from here should be normal.
 
 AIRPLAY APPEARANCE: 
 
