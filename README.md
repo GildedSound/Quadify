@@ -9,7 +9,7 @@ Think of your iOS device as a fully featured remote for online content, and Quad
 NOTE: BUTTON MATRIX IS FULLY DISABLED IN THIS BUILD! I will reinstate it in the next revision.
 
 
-## BEHAVIOUR: 
+## Behaviour: 
 
 Assuming a fresh boot, and we’re sitting at clock…
 
@@ -19,7 +19,7 @@ Assuming a fresh boot, and we’re sitting at clock…
 
 – Disconnecting device takes you to a stripped back layout, with “No Info Available” displayed. User can either: use Volumio UI to change modes, or long press the rotary encoder button to go back to clock. Mode switching from here should be normal.
 
-## AIRPLAY APPEARANCE: 
+## AirPlay Mode Appearance: 
 
 – Metadata now dynamically updates AND scrolls if the length of title and or artist are longer than the width of the white dividing line. I might adjust the speed of them, title slower than artist, just in case both are scrolling at the same time.
 
@@ -29,7 +29,7 @@ Assuming a fresh boot, and we’re sitting at clock…
 
 – Spacing in layout of airport_screen.py has been improved and evened out. 
 
-## CAVEATS AND IMPROVEMENTS TO MAKE:
+## Caveats and Improvents TBC:
 
 – Ocasionally a flicker is visible as metadata updates and refreshes on first play. TBC, maybe pause the script for a second or so to allow smoother switching
 
@@ -43,7 +43,7 @@ Assuming a fresh boot, and we’re sitting at clock…
 
 – iOS offers much more stable metadata handling across all its apps. When transmitting global audio from a macOS device, sometimes no metadata is available. For example, using Spotify from your desktop produces no title or artist information, but it does from iOS device. Apple Music works fine. TBC
 
-# Original release notes below
+# Original release notes below:
 
 # Main Quadify Repository Overview
 This repository is a comprehensive guide and toolkit for integrating Quadify audio hardware enhancements into Raspberry Pi audio systems, initially developed by Audiophonics and subsequently enhanced by the Quadify team.
