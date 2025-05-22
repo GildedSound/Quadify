@@ -31,7 +31,7 @@ Assuming a fresh boot, and we’re sitting at clock…
 
 – The first time scrolling text renders, technically it renders across the entire width of the screen. As a workaround, I made a new, opaque airplay logo/symbol that blocks out scrolling text, and used draw to create a black box 15x 64px to act as a margin for clean text cutoff. TBC, this is due to my limited understanding of the draw function at the moment.
 
-– There is no elegant AirPlay transmitting device hand off at the moment – i.e., one iOS device cannot take over Volumio/Quadify from another. The user must disconnect before handing off. TBC
+– Handoff works fine between iOS devices (connection from new device gives them immediate control) – have seen bug switching between macOS and iOS which has required a reboot. TBC
 
 – If for whatever reason the file streaming to Volumio has no title or artist metadata, display will default to file name as title. However, blank artist data may cause a bug where previous tracks artist metadata is displayed. Most official and well-managed files do not have this problem. TBC
 
