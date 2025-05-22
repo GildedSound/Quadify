@@ -4,7 +4,7 @@ Alterations have been made to clock in order to make AirPlay work in a more inte
 
 Now, AirPlay switches elegantly, and when streaming from an iOS device, is stable. macOS devices are generally fine, but streaming has more quirks, including missing metadata in some cases.
 
-Think of your iOS device as a fully featured remote for online content, and Quadify as your 'now playing' display. All you do is select your Quadify streamer.
+Think of your iOS device as a fully featured remote for online content, and Quadify as your 'now playing' display, and output to your hifi in CD quality audio.
 
 NOTE: BUTTON MATRIX IS FULLY DISABLED IN THIS BUILD! I will reinstate it in the next revision.
 
