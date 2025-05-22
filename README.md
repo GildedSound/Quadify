@@ -15,11 +15,13 @@ Assuming a fresh boot, and we’re sitting at clock…
 
 – Switching between AirPlay apps on the controlling device is seamless.  
 
-– Disconnecting device takes you to a stripped back layout, with “No Info Available” displayed. User can either: use Volumio UI to change modes, or long press the button to go back to clock. Mode switching from here should be normal.
+– Disconnecting device takes you to a stripped back layout, with “No Info Available” displayed. User can either: use Volumio UI to change modes, or long press the rotary encoder button to go back to clock. Mode switching from here should be normal.
 
 ## AIRPLAY APPEARANCE: 
 
 – Metadata now dynamically updates AND scrolls if the length of title and or artist are longer than the width of the white dividing line. I might adjust the speed of them, title slower than artist, just in case both are scrolling at the same time.
+
+– Album art dynamically displays thanks to the way that Volumio scrapes for images. Volumio finds an image using ‘artist’ and ‘album’ metadata, and we display it. It refreshes on every track – even when listening to live radio through BBC Sounds thanks to the way it handles metadata streaming. 
 
 – ‘Airplay Mode’ prints at the bottom of screen above bitrate info instead of service ‘airport_emulation’
 
