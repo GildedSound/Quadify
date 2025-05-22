@@ -13,37 +13,37 @@ NOTE: BUTTON MATRIX IS FULLY DISABLED IN THIS BUILD! I will reinstate it in the 
 
 Assuming a fresh boot, and we’re sitting at clock…
 
-– if an AirPlay device connects, but nothing is playing, clock remains. But the moment you press ‘play’ on your iOS device, it will update the display and enter AirPlay mode and airplay_screen.py. As far as I know, it will override every other mode.
+* if an AirPlay device connects, but nothing is playing, clock remains. But the moment you press ‘play’ on your iOS device, it will update the display and enter AirPlay mode and airplay_screen.py. As far as I know, it will override every other mode.
 
-– Switching between AirPlay apps on the controlling device is seamless and has been stress tested.  
+* Switching between AirPlay apps on the controlling device is seamless and has been stress tested.  
 
-– Disconnecting device takes you to a stripped back layout, with “No Info Available” displayed. User can either: use Volumio UI to change modes, or long press the rotary encoder button to go back to clock. Mode switching from here should be normal.
+* Disconnecting device takes you to a stripped back layout, with “No Info Available” displayed. User can either: use Volumio UI to change modes, or long press the rotary encoder button to go back to clock. Mode switching from here should be normal.
 
 ## New Features
 
-– Metadata now dynamically updates AND scrolls if the length of title and or artist are longer than the width of the white dividing line. I might adjust the speed of them, title slower than artist, just in case both are scrolling at the same time.
+* Metadata now dynamically updates AND scrolls if the length of title and or artist are longer than the width of the white dividing line. I might adjust the speed of them, title slower than artist, just in case both are scrolling at the same time.
 
-– Album art dynamically displays thanks to the way that Volumio scrapes for images. Volumio finds an image using ‘artist’ and ‘album’ metadata, and we display it. It refreshes on every track – even when listening to live radio through BBC Sounds thanks to the way it handles metadata streaming. 
+* Album art dynamically displays thanks to the way that Volumio scrapes for images. Volumio finds an image using ‘artist’ and ‘album’ metadata, and we display it. It refreshes on every track – even when listening to live radio through BBC Sounds thanks to the way it handles metadata streaming. If album art isn't loaded by Volumio, we can't load it either. Check the Volumio UI to see what is being cached.
 
 ## AirPlay Mode Appearance: 
 
-– ‘Airplay Mode’ prints at the bottom of screen above bitrate info instead of service ‘airport_emulation’
+* ‘Airplay Mode’ prints at the bottom of screen above bitrate info instead of service ‘airport_emulation’
 
-– Spacing in layout of airport_screen.py has been improved and evened out. 
+* Spacing in layout of airport_screen.py has been improved and evened out. 
 
-## Caveats and Improvents TBC:
+## Bugs, Caveats and Improvents TBC:
 
-– Ocasionally a flicker is visible as metadata updates and refreshes on first play. TBC, maybe pause the script for a second or so to allow smoother switching
+* Ocasionally a flicker is visible as metadata updates and refreshes on first play. TBC, maybe pause the script for a second or so to allow smoother switching
 
-– The first time scrolling text renders, technically it renders across the entire width of the screen. It then scrolls across 75px. As a workaround, I made a new, opaque airplay logo/symbol that blocks out scrolling text, and used draw to create a black box 11x 64px to act as a margin for clean text cutoff. TBC, this is due to my limited understanding of the draw function at the moment.
+* The first time scrolling text renders, technically it renders across the entire width of the screen. It then scrolls across 75px. As a workaround, I made a new, opaque airplay logo/symbol that blocks out scrolling text, and used draw to create a black box 11x 64px to act as a margin for clean text cutoff. TBC, this is due to my limited understanding of the draw function at the moment.
 
-– Handoff works fine between iOS devices (connection from new device gives them immediate control) – have seen bug switching between macOS and iOS which has required a reboot. TBC
+* Handoff works fine between iOS devices (connection from new device gives them immediate control) – have seen bug switching between macOS and iOS which has required a reboot. TBC
 
-– If for whatever reason the file streaming to Volumio has no title or artist metadata, display will default to file name as title. However, blank artist data may cause a bug where previous tracks artist metadata is displayed. Most official and well-managed files do not have this problem. TBC
+* If for whatever reason the file streaming to Volumio has no title or artist metadata, display will default to file name as title. However, blank artist data may cause a bug where previous tracks artist metadata is displayed. Most official and well-managed files do not have this problem. TBC
 
-– Cannot override screensaver on mode switching. TBC
+* Cannot override screensaver on mode switching. TBC
 
-– iOS offers much more stable metadata handling across all its apps. When transmitting global audio from a macOS device, sometimes no metadata is available. For example, using Spotify from your desktop produces no title or artist information, but it does from iOS device. We know Streaming directly from Apple Music works fine. TBC
+* iOS offers much more stable metadata handling across all its apps. When transmitting global audio from a macOS device, sometimes no metadata is available. For example, using Spotify from your desktop produces no title or artist information, but it does from iOS device. We know Streaming directly from Apple Music works fine. TBC
 
 # Original release notes below:
 
