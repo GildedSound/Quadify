@@ -4,7 +4,7 @@ Alterations have been made to clock and its behaviour. Its behavior has been cha
 
 Now, AirPlay switches elegantly, and when streaming from an iOS device, is stable. macOS devices are generally fine, but streaming has more quirks, including missing metadata in some cases.
 
-NOTE: BUTTON MATRIX IS FULLY DISABLED IN THIS BUILD! I will reinstate in in the next revision.
+NOTE: BUTTON MATRIX IS FULLY DISABLED IN THIS BUILD! I will reinstate it in the next revision.
 
 
 ## BEHAVIOUR: 
