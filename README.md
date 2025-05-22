@@ -25,11 +25,13 @@ Assuming a fresh boot, and we’re sitting at clock…
 
 * Album art dynamically displays thanks to the way that Volumio scrapes for images. Volumio finds an image using ‘artist’ and ‘album’ metadata, and we display it. It refreshes on every track – even when listening to live radio through BBC Sounds thanks to the way it handles metadata streaming. If album art isn't loaded by Volumio, we can't load it either. Check the Volumio UI to see what is being cached.
 
-## AirPlay Mode Appearance: 
+## AirPlay Mode Appearance Tweaks: 
+
+* This version uses most of the height and width of the display.
 
 * ‘Airplay Mode’ prints at the bottom of screen above bitrate info instead of service ‘airport_emulation’
 
-* Spacing in layout of airport_screen.py has been improved and evened out. 
+* Spacing and layout of text has been improved and evened out. 
 
 ## Bugs, Caveats and Improvents TBC:
 
