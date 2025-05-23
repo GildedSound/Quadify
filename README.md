@@ -2,7 +2,7 @@
 
 This update builds on top of Matt Shepherd's Quadify platform. 
 
-To date, AirPlay support has been incomplete. I use AirPlay as a powerful tool to use turn my iOS device into a remote control for online content. It can provide instant access to a huge range of media, from podcasts to live streams to my Apple Music library, Spotify and Amazon Music with the touch of a button, without the need for a separate app or UI. And all in CD quality audio. We know AirPort transmissions deliver dynamic metadata, so why not use it?
+To date, AirPlay support has been incomplete. I use AirPlay as a powerful tool to use my iOS device as a remote control for online content. It can provide instant access to a huge range of media, from podcasts to live streams to my Apple Music library, Spotify and Amazon Music with the touch of a button, without the need for a separate app or UI. And all in CD quality audio. We know AirPort transmissions deliver dynamic metadata, so why not use it?
 
 ## Patch Summary
 
@@ -58,6 +58,8 @@ PLEASE NOTE: BUTTON MATRIX IS FULLY DISABLED IN THIS BUILD! I will reinstate it 
 * **Metadata now dynamically updates AND scrolls if the length of title and or artist are longer than the width of the white dividing line.** I might adjust the speed of them, title slower than artist, just in case both are scrolling at the same time.
 
 * **Album art dynamically displays thanks to the way that Volumio uses metadata to scrape for images.** Volumio finds an image using ‘artist’ and ‘album’ metadata, and we display it. It refreshes on every track – even when listening to live radio through BBC Sounds thanks to the way it handles metadata streaming. However, if album art isn't loaded by Volumio, we can't load it either. Check the Volumio UI to see what is being cached, but 'normal' artist and title metadata will almost always display an image.
+  
+NOTE: Both dynamic metadata and album art updates work especially well for the iOS BBC Sounds app. 
 
 ## AirPlay Mode Appearance Tweaks: 
 
