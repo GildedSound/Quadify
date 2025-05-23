@@ -19,6 +19,12 @@ The following files have seen updates (in order of logic and importance). Inline
 
 With these changes, AirPlay switches elegantly. When streaming from an iOS device, AirPlay mode is stable. Desktop/non-Apple/macOS devices will always stream audio, but available metadata is based on conditions, and the user will experience missing metadata in some cases (see notes for more details).
 
+A full debug log is created on each boot/reset. I have been using this to observe mode swithcing, metadata structures and Volumio's search for image content. Watch it in real time in SSH:
+
+```bash
+tail -F /tmp/quadify_debug.log
+```
+
 PLEASE NOTE: BUTTON MATRIX IS FULLY DISABLED IN THIS BUILD! I will reinstate it in the next revision.
 
 
