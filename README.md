@@ -24,7 +24,7 @@ PLEASE NOTE: BUTTON MATRIX IS FULLY DISABLED IN THIS BUILD! I will reinstate it 
 
 ## Behaviour: 
 
-Assuming a fresh boot, and we’re sitting at clock or using another mode…
+**Assuming a fresh boot, and we’re sitting at clock or using another mode…**
 
 * if an AirPlay device connects, but nothing is playing, clock remains. But the moment you press ‘play’ on your iOS device, it will update the display and enter AirPlay mode and airplay_screen.py. As far as I know, it will override every other mode.
 
@@ -34,39 +34,35 @@ Assuming a fresh boot, and we’re sitting at clock or using another mode…
 
 ## New Features
 
-* Metadata now dynamically updates AND scrolls if the length of title and or artist are longer than the width of the white dividing line. I might adjust the speed of them, title slower than artist, just in case both are scrolling at the same time.
+* **Metadata now dynamically updates AND scrolls if the length of title and or artist are longer than the width of the white dividing line.** I might adjust the speed of them, title slower than artist, just in case both are scrolling at the same time.
 
-* Album art dynamically displays thanks to the way that Volumio uses metadata to scrape for images. Volumio finds an image using ‘artist’ and ‘album’ metadata, and we display it. It refreshes on every track – even when listening to live radio through BBC Sounds thanks to the way it handles metadata streaming. However, if album art isn't loaded by Volumio, we can't load it either. Check the Volumio UI to see what is being cached.
+* **Album art dynamically displays thanks to the way that Volumio uses metadata to scrape for images.** Volumio finds an image using ‘artist’ and ‘album’ metadata, and we display it. It refreshes on every track – even when listening to live radio through BBC Sounds thanks to the way it handles metadata streaming. However, if album art isn't loaded by Volumio, we can't load it either. Check the Volumio UI to see what is being cached.
 
 ## AirPlay Mode Appearance Tweaks: 
 
-* This version uses most of the height and width of the display.
-
-* ‘Airplay Mode’ prints at the bottom of screen above bitrate info instead of service ‘airport_emulation’
+* ‘Airplay Mode’ prints at the bottom of screen above bitrate info instead of service ‘airport_emulation.’ A pause in airplay streaming takes us to a holding page that says "No Information Available"
 
 * Spacing and layout of text has been improved and evened out. Icon size has been increased to full height of screen, 64x64px (I am building outside of a chassis so this might change)
 
 ## Bugs, Caveats and Improvents TBC:
 
-* Ocasionally a flicker is visible as metadata updates and refreshes on first play. TBC, maybe pause the script for a second or so to allow smoother switching
+* **Visual Artifacts:** Occasionally, a flicker is visible as metadata updates and refreshes on first play. TBC, maybe pause the script for a second or so to allow smoother switching
 
-* The first time scrolling text renders, technically it renders across the entire width of the screen. It then scrolls across 75px. As a workaround, I made a new, opaque AirPlay logo/symbol that blocks out scrolling text, and used draw to create a black box 11x 64px to act as a margin for clean text cutoff. TBC, this is due to my limited understanding of the draw function at the moment.
+* **Text Scrolling (experimental):** The first time scrolling text renders, technically it renders across the entire width of the screen. It then scrolls across 75px. As a workaround, I made a new, opaque AirPlay logo/symbol that blocks out scrolling text, and used draw to create a black box 11x 64px to act as a margin for clean text cutoff. TBC, this is due to my limited understanding of the draw function at the moment.
 
-* Album art display has inconsistencies due to how each iOS app handles metadata and how Volumio responds to it. Quadify AirPlay is only able to display album art that Volumio can display in its UI. For example, Spotify uses commas and other ASCII symbols in its song titles, and Volumio doesn't alwas seem to be able to pull image data from it. Absolute Radio puts a combined artist and title in the 'artist' field.   
+* **Album art:** The dynamic appearance of images has inconsistencies due to how each iOS app handles metadata and how Volumio responds to it. Quadify AirPlay is only able to display album art that Volumio can display in its UI. For example, Spotify uses commas and other ASCII symbols in its song titles, and Volumio doesn't alwas seem to be able to pull image data from it. Absolute Radio puts a combined artist and title in the 'artist' field.   
 
-* Handoff works fine between iOS devices (connection to Volumio from a new device gives them immediate control) – however, I have seen a bug when switching between macOS and iOS which has required a reboot. TBC
+* **Device Handoff:** Handoff works fine between iOS devices (connection to Volumio from a new device gives them immediate control) – however, I have seen a bug when switching between macOS and iOS which has required a reboot. TBC
 
-* If for whatever reason the file streaming to Volumio has no title or artist metadata, display will default to file name as title. However, blank artist or album data may cause a bug where previous tracks artist or album metadata is displayed. Most official and well-managed files do not have this problem. This seems to be a quirck at the Shairport > Volumio level. As far as I'm aware, it isn't possible to reset this field without resetting Shairport. TBC
+* **Missing Metadata:** If for whatever reason the file streaming to Volumio has no title or artist metadata, display will default to file name as title. However, blank 'artist' or 'album' data may cause a bug where previous tracks artist or album metadata is displayed. Most official and well-managed files do not have this problem. This seems to be a quirk at the Shairport > Volumio level. As far as I'm aware, it isn't possible to reset this field without resetting Shairport. TBC
 
-* Cannot override screensaver on mode switching. Entering AirPlay mode makes the display flicker (probably due to a similar issue to 'clock'), and only a long press back to clock and a pausing then playing the AirpPlay stream will stabilise the display. Rigourous mode switching may make it impossible to connect via AirPlay until a reboot, or using ssh to reset shairport-sync. TBC
+* **Quadify Mode Switching Crashes:** Cannot override screensaver on mode switching. Entering AirPlay mode makes the display flicker (probably due to a similar issue to 'clock'), and only a long press back to clock and a pausing then playing the AirpPlay stream will stabilise the display. Rigourous mode switching may make it impossible to connect via AirPlay until a reboot, or using ssh to reset shairport-sync. TBC
 
 ```bash
 sudo systemctl restart shairport-sync
 ```
 
-* iOS offers much more stable metadata handling across all its apps. Desktop platforms do not perform as consistently – i.e. when transmitting global audio from a macOS device (connecting to AirPlay via desktop Menu Bar), sometimes no metadata is available. For example, using Spotify from your desktop produces no title or artist information, but it does from iOS device. We know Streaming directly from Apple Music works fine. TBC
-
-* This is specific to me and other people who listen to BBC Radio, or have other favourite stations that supply rich metadata, but since BBC uses the 'title' field to describe station during host and news segues (Radio 2, Radio 6 etc) I am considering creating custom icons for these stations to make AirPlay feel even more dynamic and responsive.
+* **Differences in metadata transmission, device dependent:** iOS offers much more stable metadata handling across all its apps. Desktop platforms do not perform as consistently – i.e. when transmitting global audio from a macOS device (connecting to AirPlay via desktop Menu Bar), sometimes no metadata is available. For example, using Spotify from your desktop produces no title or artist information, but it does from iOS device. We know Streaming directly from Apple Music works fine. TBC
 
 # Original release notes below:
 
