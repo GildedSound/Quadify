@@ -4,7 +4,8 @@ Alterations have been made to clock in order to make AirPlay work in a more inte
 
 The following files have seen updates (in order of logic and importance):
 
-```/src/main.py
+```
+/src/main.py
 /src/managers/mode_manager.py
 /src/display/screens/clock.py
 /src/display/screens/airplay_screen.py
