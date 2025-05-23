@@ -6,7 +6,7 @@ This update builds on top of Matt Shepherd's Quadify platform. To date, AirPlay 
 
 Alterations have been made to clock in order to make AirPlay work in a more integrated way. Its behavior has been changed from threaded background operation to mode. The AirPlay status updates weren’t the issue – it was the clock scripts' enthusiasm to be a fallback if it perceived a ‘paused’ or ‘idle’ state, or blank metadata, all of which can happen at any time.
 
-The following files have seen updates (in order of logic and importance):
+The following files have seen updates (in order of logic and importance). Inline comments to new blocks begin with 'GS':
 
 ```
 /src/main.py
