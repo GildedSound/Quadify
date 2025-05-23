@@ -47,6 +47,8 @@ Assuming a fresh boot, and we’re sitting at clock…
 
 * iOS offers much more stable metadata handling across all its apps. When transmitting global audio from a macOS device, sometimes no metadata is available. For example, using Spotify from your desktop produces no title or artist information, but it does from iOS device. We know Streaming directly from Apple Music works fine. TBC
 
+* This is specific to me and other people who listen to BBC Radio, or have other favourite stations, but since BBC uses the 'title' field to describe station during host and news segues (Radio 2, Radio 6 etc) I am considering creating custom icons for these stations to make AirPlay feel even more rich and responsive.
+
 # Original release notes below:
 
 # Main Quadify Repository Overview
