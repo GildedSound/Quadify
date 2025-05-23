@@ -26,7 +26,7 @@ PLEASE NOTE: BUTTON MATRIX IS FULLY DISABLED IN THIS BUILD! I will reinstate it 
 
 **Assuming a fresh boot, and we’re sitting at clock or using another mode…**
 
-* if an AirPlay device connects, but nothing is playing, clock remains. But the moment you press ‘play’ on your iOS device, it will update the display and enter AirPlay mode and airplay_screen.py, and Volumio will enter a passive state until the mode is switched again. As far as I know, AirPlay will override every other mode.
+* if an AirPlay device connects, but nothing is playing, clock remains. But the moment you press ‘play’ on your iOS device, it will update the display and enter AirPlay mode. Volumio will enter a passive state until the mode is switched again (normal behaviour). As far as I know, AirPlay will override every other mode.
 
 * Switching between AirPlay apps on the controlling device is seamless and has been stress tested.  
 
