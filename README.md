@@ -1,6 +1,6 @@
 # Quadify AirPlay Version +0.5a – supplementary to core build
 
-This update builds on top of Matt Shepherd's Quadify platform. 
+This update builds on top of Matt Shepherd's Quadify front end. 
 
 To date, AirPlay support has been incomplete. I use AirPlay as a powerful tool to turn my iOS device into a remote control for online content that I can hear on my hifi. It can provide instant access to a huge range of media, from podcasts to live streams to my Apple Music library, Spotify and Amazon Music with the touch of a button, without the need for a separate app or UI. And all in CD quality audio. We know AirPort transmissions deliver dynamic metadata, so why not use it?
 
