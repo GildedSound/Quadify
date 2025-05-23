@@ -52,13 +52,13 @@ Assuming a fresh boot, and we’re sitting at clock or using another mode…
 
 * The first time scrolling text renders, technically it renders across the entire width of the screen. It then scrolls across 75px. As a workaround, I made a new, opaque AirPlay logo/symbol that blocks out scrolling text, and used draw to create a black box 11x 64px to act as a margin for clean text cutoff. TBC, this is due to my limited understanding of the draw function at the moment.
 
-* Album art display has inconsistencies due to how each iOS app handles metadata and how Volumio responds to it. Quadify AirPlay is only able to display album art that Volumio can display in its UI. For example, Spotify uses commas and other ASCII symbols in its song titles, and that Volumio doesn't seem to be able to pull image data using it. Amazon Music uses 
+* Album art display has inconsistencies due to how each iOS app handles metadata and how Volumio responds to it. Quadify AirPlay is only able to display album art that Volumio can display in its UI. For example, Spotify uses commas and other ASCII symbols in its song titles, and Volumio doesn't alwas seem to be able to pull image data from it. Absolute Radio puts a combined artist and title in the 'artist' field.   
 
-* Handoff works fine between iOS devices (connection from new device gives them immediate control) – have seen bug switching between macOS and iOS which has required a reboot. TBC
+* Handoff works fine between iOS devices (connection to Volumio from a new device gives them immediate control) – however, I have seen a bug when switching between macOS and iOS which has required a reboot. TBC
 
-* If for whatever reason the file streaming to Volumio has no title or artist metadata, display will default to file name as title. However, blank artist data may cause a bug where previous tracks artist metadata is displayed. Most official and well-managed files do not have this problem. This seems to be a quirck at the shairport > Volumio level. As far as I'm aware, it isn't possible to reset this field without resetting Shairport. TBC
+* If for whatever reason the file streaming to Volumio has no title or artist metadata, display will default to file name as title. However, blank artist or album data may cause a bug where previous tracks artist or album metadata is displayed. Most official and well-managed files do not have this problem. This seems to be a quirck at the Shairport > Volumio level. As far as I'm aware, it isn't possible to reset this field without resetting Shairport. TBC
 
-* Cannot override screensaver on mode switching. Rigourous mode switching may make it impossible to connect via AirPlay until a reboot, or using ssh to reset shairport-sync. TBC
+* Cannot override screensaver on mode switching. Entering AirPlay mode makes the display flicker (probably due to a similar issue to 'clock'), and only a long press back to clock and a pausing then playing the AirpPlay stream will stabilise the display. Rigourous mode switching may make it impossible to connect via AirPlay until a reboot, or using ssh to reset shairport-sync. TBC
 
 ```bash
 sudo systemctl restart shairport-sync
