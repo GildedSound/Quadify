@@ -36,7 +36,7 @@ PLEASE NOTE: BUTTON MATRIX IS FULLY DISABLED IN THIS BUILD! I will reinstate it 
 
 * **Metadata now dynamically updates AND scrolls if the length of title and or artist are longer than the width of the white dividing line.** I might adjust the speed of them, title slower than artist, just in case both are scrolling at the same time.
 
-* **Album art dynamically displays thanks to the way that Volumio uses metadata to scrape for images.** Volumio finds an image using ‘artist’ and ‘album’ metadata, and we display it. It refreshes on every track – even when listening to live radio through BBC Sounds thanks to the way it handles metadata streaming. However, if album art isn't loaded by Volumio, we can't load it either. Check the Volumio UI to see what is being cached.
+* **Album art dynamically displays thanks to the way that Volumio uses metadata to scrape for images.** Volumio finds an image using ‘artist’ and ‘album’ metadata, and we display it. It refreshes on every track – even when listening to live radio through BBC Sounds thanks to the way it handles metadata streaming. However, if album art isn't loaded by Volumio, we can't load it either. Check the Volumio UI to see what is being cached, but 'normal' artist and title metadata will almost always display an image.
 
 ## AirPlay Mode Appearance Tweaks: 
 
