@@ -1,6 +1,6 @@
 # Quadify AirPlay Version +0.5a – supplementary to core build
 
-This update builds on Matt Shepherd's Quadify platform that runs on top of Volumio to provide a display and physcial control, all housed in a Quad FM4 chassis. To date, AirPlay support has been incomplete...
+This update builds on top of Matt Shepherd's Quadify platform. To date, AirPlay support has been incomplete... for users like me, AirPlay is a powerful application that turns an iOS device into a remote control that can provide access to podcasts, live streams and Apple Music library with the touch of a button, all in CD quality audio.
 
 Alterations have been made to clock in order to make AirPlay work in a more integrated way. Its behavior has been changed from threaded background operation to mode. The AirPlay status updates weren’t the issue – it was the clock scripts' enthusiasm to be a fallback if it perceived a ‘paused’ or ‘idle’ state, or blank metadata, all of which can happen at any time.
 
@@ -13,11 +13,9 @@ The following files have seen updates (in order of logic and importance):
 /src/display/screens/airplay_screen.py
 ```
 
-With these changes, AirPlay switches elegantly. When streaming from an iOS device, is stable. macOS devices are generally fine, but streaming has more quirks, including missing metadata in some cases.
+With these changes, AirPlay switches elegantly. When streaming from an iOS device, is stable. Desktop/non-Apple/macOS devices will always stream audio, but supplied data has more quirks based on conditions, including missing metadata in some cases (see notes for more details)
 
-Think of your iOS device as a fully featured remote for online content, and Quadify as your 'now playing' display, and output to your hifi in CD quality audio.
-
-NOTE: BUTTON MATRIX IS FULLY DISABLED IN THIS BUILD! I will reinstate it in the next revision.
+PLEASE NOTE: BUTTON MATRIX IS FULLY DISABLED IN THIS BUILD! I will reinstate it in the next revision.
 
 
 ## Behaviour: 
