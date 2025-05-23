@@ -2,7 +2,7 @@
 
 This update builds on top of Matt Shepherd's Quadify platform. 
 
-To date, AirPlay support has been incomplete... I see AirPlay as a powerful tool that turns an iOS device into a remote control. It can provide access to a huge range of media, from podcasts, live streams to your Apple Music library with the touch of a button, all in CD quality audio. We know AirPort transmissions deliver dynamic metadata, so why not use it?
+To date, AirPlay support has been incomplete... I see AirPlay as a powerful tool that turns an iOS device into a remote control. It can provide access to a huge range of media, from podcasts to live streams to your Apple Music library, Spotify and Amazon Music with the touch of a button, all in CD quality audio. We know AirPort transmissions deliver dynamic metadata, so why not use it?
 
 ## Patch Summary
 
