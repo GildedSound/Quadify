@@ -1,6 +1,8 @@
 # Quadify AirPlay Version +0.5a – supplementary to core build
 
-This update builds on top of Matt Shepherd's Quadify platform. To date, AirPlay support has been incomplete... for users like me, AirPlay is a powerful application that turns an iOS device into a remote control that can provide access to podcasts, live streams and Apple Music library with the touch of a button, all in CD quality audio.
+This update builds on top of Matt Shepherd's Quadify platform. 
+
+To date, AirPlay support has been incomplete... I see AirPlay as a powerful tool that turns an iOS device into a remote control. It can provide access to a huge range of media, from podcasts, live streams to your Apple Music library with the touch of a button, all in CD quality audio. We know AirPort transmissions deliver dynamic metadata, so why not use it?
 
 ## Patch Summary
 
@@ -48,11 +50,13 @@ Assuming a fresh boot, and we’re sitting at clock or using another mode…
 
 * Ocasionally a flicker is visible as metadata updates and refreshes on first play. TBC, maybe pause the script for a second or so to allow smoother switching
 
-* The first time scrolling text renders, technically it renders across the entire width of the screen. It then scrolls across 75px. As a workaround, I made a new, opaque airplay logo/symbol that blocks out scrolling text, and used draw to create a black box 11x 64px to act as a margin for clean text cutoff. TBC, this is due to my limited understanding of the draw function at the moment.
+* The first time scrolling text renders, technically it renders across the entire width of the screen. It then scrolls across 75px. As a workaround, I made a new, opaque AirPlay logo/symbol that blocks out scrolling text, and used draw to create a black box 11x 64px to act as a margin for clean text cutoff. TBC, this is due to my limited understanding of the draw function at the moment.
+
+* Album art display has inconsistencies due to how each iOS app handles metadata and how Volumio responds to it. Quadify AirPlay is only able to display album art that Volumio can display in its UI. For example, Spotify uses commas and other ASCII symbols in its song titles, and that Volumio doesn't seem to be able to pull image data using it. Amazon Music uses 
 
 * Handoff works fine between iOS devices (connection from new device gives them immediate control) – have seen bug switching between macOS and iOS which has required a reboot. TBC
 
-* If for whatever reason the file streaming to Volumio has no title or artist metadata, display will default to file name as title. However, blank artist data may cause a bug where previous tracks artist metadata is displayed. Most official and well-managed files do not have this problem. TBC
+* If for whatever reason the file streaming to Volumio has no title or artist metadata, display will default to file name as title. However, blank artist data may cause a bug where previous tracks artist metadata is displayed. Most official and well-managed files do not have this problem. This seems to be a quirck at the shairport > Volumio level. As far as I'm aware, it isn't possible to reset this field without resetting Shairport. TBC
 
 * Cannot override screensaver on mode switching. Rigourous mode switching may make it impossible to connect via AirPlay until a reboot, or using ssh to reset shairport-sync. TBC
 
