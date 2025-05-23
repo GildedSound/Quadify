@@ -54,7 +54,9 @@ Assuming a fresh boot, and we’re sitting at clock or using another mode…
 
 * Cannot override screensaver on mode switching. Rigourous mode switching may make it impossible to connect via AirPlay until a reboot, or using ssh to reset shairport-sync. TBC
 
-```sudo systemctl restart shairport-sync```
+```bash
+sudo systemctl restart shairport-sync
+```
 
 * iOS offers much more stable metadata handling across all its apps. When transmitting global audio from a macOS device, sometimes no metadata is available. For example, using Spotify from your desktop produces no title or artist information, but it does from iOS device. We know Streaming directly from Apple Music works fine. TBC
 
