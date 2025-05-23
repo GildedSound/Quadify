@@ -55,7 +55,7 @@ PLEASE NOTE: BUTTON MATRIX IS FULLY DISABLED IN THIS BUILD! I will reinstate it 
 
 ## New Features
 
-* **Metadata now dynamically updates AND scrolls if the length of title and or artist are longer than the width of the white dividing line.** I might adjust the speed of them, title slower than artist, just in case both are scrolling at the same time.
+* **Metadata now dynamically updates AND scrolls if the length of title and or artist are longer than the width of the white dividing line.** Very rarely, both scroll at the same time (long list of artitsts in collaboration, with a long title) so I might adjust the speed, title slower than artist. But this does seem to be an uncommon occurrance 
 
 * **Album art dynamically displays thanks to the way that Volumio uses metadata to scrape for images.** Volumio finds an image using ‘artist’ and ‘album’ metadata, and we display it. It refreshes on every track – even when listening to live radio through BBC Sounds thanks to the way it handles metadata streaming. However, if album art isn't loaded by Volumio, we can't load it either. Check the Volumio UI to see what is being cached, but 'normal' artist and title metadata will almost always display an image.
   
@@ -85,7 +85,7 @@ NOTE: Both dynamic metadata and album art updates work especially well for the i
 sudo systemctl restart shairport-sync
 ```
 
-* **Differences in metadata transmission, device dependent:** iOS offers much more stable metadata handling across all its apps. Desktop platforms do not perform as consistently – i.e. when transmitting global audio from a macOS device (connecting to AirPlay via desktop Menu Bar), sometimes no metadata is available. For example, using Spotify from your desktop produces no title or artist information, but it does from iOS device. We know Streaming directly from Apple Music works fine. TBC
+* **Differences in metadata transmission, device dependent:** iOS offers much more stable metadata handling across all its apps. Desktop platforms do not perform as consistently – i.e. when transmitting global audio from a macOS device (connecting to AirPlay via desktop Menu Bar), sometimes no metadata is available. In another example, using Spotify from your desktop produces no title or artist information, but it does from iOS device. We know Streaming directly from macOS Apple Music works fine. TBC
 
 # Original release notes below:
 
