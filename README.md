@@ -7,7 +7,8 @@ The following files have seen updates (in order of logic and importance):
 ```/src/main.py
 /src/managers/mode_manager.py
 /src/display/screens/clock.py
-/src/display/screens/airplay_screen.py```
+/src/display/screens/airplay_screen.py
+```
 
 With these changes, AirPlay switches elegantly. When streaming from an iOS device, is stable. macOS devices are generally fine, but streaming has more quirks, including missing metadata in some cases.
 
