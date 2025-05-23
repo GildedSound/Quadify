@@ -15,7 +15,7 @@ The following files have seen updates (in order of logic and importance):
 /src/display/screens/airplay_screen.py
 ```
 
-With these changes, AirPlay switches elegantly. When streaming from an iOS device, is stable. Desktop/non-Apple/macOS devices will always stream audio, but supplied data has more quirks based on conditions, including missing metadata in some cases (see notes for more details)
+With these changes, AirPlay switches elegantly. When streaming from an iOS device, AirPlay mode is stable. Desktop/non-Apple/macOS devices will always stream audio, but available metadata is based on conditions, and the user will experience missing metadata in some cases (see notes for more details).
 
 PLEASE NOTE: BUTTON MATRIX IS FULLY DISABLED IN THIS BUILD! I will reinstate it in the next revision.
 
