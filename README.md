@@ -43,7 +43,7 @@ Assuming a fresh boot, and we’re sitting at clock or using another mode…
 
 * If for whatever reason the file streaming to Volumio has no title or artist metadata, display will default to file name as title. However, blank artist data may cause a bug where previous tracks artist metadata is displayed. Most official and well-managed files do not have this problem. TBC
 
-* Cannot override screensaver on mode switching. Rigourous mode switching may make it impossible to connect via AirPlay until a reboot, or using ssh to ''' sudo systemctl restart shairport-sync
+* Cannot override screensaver on mode switching. Rigourous mode switching may make it impossible to connect via AirPlay until a reboot, or using ssh to ''' sudo systemctl restart shairport-sync '''
   TBC
 
 * iOS offers much more stable metadata handling across all its apps. When transmitting global audio from a macOS device, sometimes no metadata is available. For example, using Spotify from your desktop produces no title or artist information, but it does from iOS device. We know Streaming directly from Apple Music works fine. TBC
