@@ -6,20 +6,11 @@ import time
 import requests
 from io import BytesIO
 import itertools
+from urllib.parse import urlparse, parse_qs, quote
 
 class AirPlayScreen:
-    """
-    GS modified version +0.5
-    An AirPlay screen that displays:
-      - Title (GS Experimental scrolling – if long, scroll across screen)
-      - Artist (GS Experimental scrolling – if long, scroll across screen)
-      - A horizontal separator line
-      - Service info (e.g. “AirPlay Mode”) and quality info (e.g. bitdepth/samplerate)
-      – Instead of trying to download album art (which for AirPlay is not valid), it uses
-        a static AirPlay icon (preloaded in DisplayManager, user changable via upload).
-      – GS Added a black box that acts as a margin between icon and text scrolling (cheeky workaround)     
-    """
     def __init__(self, display_manager, volumio_listener, mode_manager):
+        # Initialize logging and dependencies
         self.logger = logging.getLogger(self.__class__.__name__)
         self.logger.setLevel(logging.INFO)
 
@@ -27,42 +18,37 @@ class AirPlayScreen:
         self.volumio_listener = volumio_listener
         self.mode_manager = mode_manager
 
-        # State and thread control
+        # Setup screen state and threading controls
         self.is_active = False
         self.latest_state = None
         self.current_state = None
         self.state_lock = threading.Lock()
         self.update_event = threading.Event()
         self.stop_event = threading.Event()
-        
-        # GS Experimental Scrolling offset
-        self.scroll_offset_title = 0
-        self.scroll_offset_artist = 0        
 
-        # Fonts (use the same keys as in WebRadioScreen or adjust as desired)
+        # Scrolling offsets for long text
+        self.scroll_offset_title = 0
+        self.scroll_offset_artist = 0
+
+        # Load fonts from display manager or fall back to default
         self.font_title = display_manager.fonts.get('radio_title', ImageFont.load_default())
         self.font_small = display_manager.fonts.get('radio_small', ImageFont.load_default())
         self.font_label = display_manager.fonts.get('radio_bitrate', ImageFont.load_default())
 
-        # Background update thread
+        # Start the display update thread
         self.update_thread = threading.Thread(target=self.update_display_loop, daemon=True)
         self.update_thread.start()
         self.logger.info("AirPlayScreen: Started background update thread.")
 
-        # Connect to Volumio state changes
+        # Subscribe to Volumio state changes
         if self.volumio_listener:
             self.volumio_listener.state_changed.connect(self.on_volumio_state_change)
         self.logger.info("AirPlayScreen initialised.")
 
-        # For repeated-update suppression, track the last state (and timestamp)
         self.last_state = None
 
+    # Respond only to active AirPlay state changes
     def on_volumio_state_change(self, sender, state):
-        """
-        Update display only if active and if the service indicates AirPlay.
-        Also, if the state data has not changed (for example if title/artist are unchanged)
-        within a threshold, ignore the update.
-        """
         if not self.is_active:
             self.logger.debug("AirPlayScreen: ignoring state change; screen not active.")
             return
@@ -72,10 +58,10 @@ class AirPlayScreen:
             return
 
         current_time = time.time()
-        THRESHOLD = 3.0  # seconds; adjust as needed
+        THRESHOLD = 3.0
 
+        # Prevent frequent redraws for same track within short interval
         with self.state_lock:
-            # Compare with last state if available.
             if self.last_state:
                 same_track = (
                     state.get("title") == self.last_state.get("title") and
@@ -85,14 +71,13 @@ class AirPlayScreen:
                 if same_track and (current_time - last_time < THRESHOLD):
                     self.logger.debug("AirPlayScreen: Ignoring repeated play event (same track within threshold).")
                     return
-            # Stamp the state with current timestamp and save
             state["timestamp"] = current_time
             self.last_state = state.copy()
             self.latest_state = state.copy()
         self.update_event.set()
-
+    
+    # Wait for display updates and render the screen accordingly GS Note that timeout= controls speed of scrolling
     def update_display_loop(self):
-        """Wait for state updates (or timeout) and then redraw the screen."""
         while not self.stop_event.is_set():
             triggered = self.update_event.wait(timeout=0.1)
             with self.state_lock:
@@ -102,12 +87,11 @@ class AirPlayScreen:
                     self.update_event.clear()
             if self.is_active and self.mode_manager.get_mode() == "airplay" and self.current_state:
                 self.draw_display(self.current_state)
-                
+    
+    # Enter AirPlay screen mode and refresh state
     def start_mode(self):
         if self.mode_manager.get_mode() != "airplay":
             self.logger.warning("AirPlayScreen: Mode is not 'airplay'; forcing start anyway.")
-            # Optionally, you can force the state here:
-            # self.mode_manager.machine.set_state("airplay")
         self.is_active = True
         try:
             if self.volumio_listener and self.volumio_listener.socketIO:
@@ -120,11 +104,9 @@ class AirPlayScreen:
             self.update_thread = threading.Thread(target=self.update_display_loop, daemon=True)
             self.update_thread.start()
             self.logger.debug("AirPlayScreen: Display update thread restarted.")
-
+    
+    # Cleanly shut down the AirPlay screen
     def stop_mode(self):
-        """
-        Called when leaving 'airplay' mode.
-        """
         if not self.is_active:
             self.logger.debug("AirPlayScreen: stop_mode called but not active.")
             return
@@ -139,105 +121,128 @@ class AirPlayScreen:
 
         self.display_manager.clear_screen()
         self.logger.info("AirPlayScreen: Stopped mode and cleared screen.")
-
+    
+    # GS Experimental Album Art loading script
+    # Some symbols in artist and album titles may cause images not to load (, &)
     def get_albumart(self, url):
-        """
-        For AirPlay we do not download album art from a URL (which may be invalid).
-        Instead, we return None so that our draw_display() method can default to using
-        a static AirPlay icon.
-        """
+        if not url:
+            default_path = self.display_manager.config.get("default_album_art")
+            if default_path and os.path.exists(default_path):
+                try:
+                    return Image.open(default_path).convert("RGB")
+                except Exception as e:
+                    self.logger.error(f"Failed to load default album art from {default_path}: {e}")
+                    return None
+            return None
+
+        try:
+            parsed = urlparse(url)
+            query = parse_qs(parsed.query)
+            web = query.get("web", [None])[0]
+            if web:
+                folders = web.split("/")
+                artist = folders[0] if len(folders) > 0 else None
+                album = folders[1] if len(folders) > 1 else None
+                folder_parts = [artist] if artist else []
+                if album:
+                    folder_parts.append(album)
+                folder_path = "/data/albumart/web/" + "/".join([
+                    quote(f, safe="()%") for f in folder_parts if f
+                ])
+                if os.path.isdir(folder_path):
+                    for fname in os.listdir(folder_path):
+                        if fname.lower().endswith((".jpg", ".png", ".webp")):
+                            img_path = os.path.join(folder_path, fname)
+                            self.logger.debug(f"Loading album art from {img_path}")
+                            return Image.open(img_path).convert("RGB")
+                self.logger.warning(f"No image file found in {folder_path}") # GS Only uncomment this if debugging
+        except Exception as e:
+            self.logger.error(f"Error parsing or loading local album art: {e}")
+
         return None
         
-    # GS Experimental scroll - drawing
+    # GS Experimental Scroll text horizontally if wider than the screen
     def scroll_text_simple(self, draw, text, font, y, scroll_offset, screen_width, fill="white"):
         text_width, _ = draw.textsize(text, font=font)
-        
         if text_width <= screen_width:
             draw.text((0, y), text, font=font, fill=fill)
             return 0, False
-
         x = screen_width - (scroll_offset % (text_width + screen_width))
         draw.text((x, y), text, font=font, fill=fill)
         return scroll_offset + 2, True
-
+    
+    # Main rendering logic for the AirPlay screen
     def draw_display(self, data):
-        """
-        Draw the AirPlay screen with:
-         - Title (GS Experimental scrolling)
-         - Artist (GS Experimental scrolling)
-         - A horizontal separator line
-         - Service info (or stream) and quality info (bitdepth/samplerate)
-         - Instead of album art, use the preloaded 'airplay' icon.
-        """
         base_image = Image.new("RGB", self.display_manager.oled.size, "black")
         draw = ImageDraw.Draw(base_image)
-        margin = 0 # GS Changed to 0, push the layout up
-
+        margin = 0
         screen_width, screen_height = self.display_manager.oled.size
 
-        # Extract data values with fallbacks.
+        # Extract text info from playback state
         title = data.get("title", "AirPlay")
-        # GS 'No Info' fallback seems appropriate since it is either missing (audio filename only) or Airplay is not streaming
-        artist = data.get("artist") or "No Info Available" 
+        artist = data.get("artist") or "No Info Available"
         service = data.get("service", "AirPlay").strip()
         quality = f"{data.get('bitdepth', 'N/A')}  {data.get('samplerate', 'N/A')}"
 
-        # Set vertical positions (GS Adjusted to even out the spacing between lines).
-        title_y = margin 
-        artist_y = margin + 17
-        divider_y = margin + 37
-        service_y = divider_y + 3 
-        quality_y = divider_y + 15
+        # Define Y positions of each line
+        title_y = margin - 5
+        artist_y = margin + 13
+        divider_y = margin + 33
+        service_y = divider_y + 5
+        quality_y = divider_y + 18
 
-        scrollable_width = screen_width - 75  # Reserve space for 60px icon on the right
-
-        # GS Draw Experimental Scrolling from long metadata
+        # Scroll long title/artist text
+        scrollable_width = screen_width - 75
         self.scroll_offset_title, _ = self.scroll_text_simple(
             draw, title, self.font_title, title_y, self.scroll_offset_title, scrollable_width
         )
-
         self.scroll_offset_artist, _ = self.scroll_text_simple(
             draw, artist, self.font_small, artist_y, self.scroll_offset_artist, scrollable_width
         )
-        # Draw horizontal separator line. Leave space on the right for the icon.
-        icon_width = 60
-        gap = 15
+
+        # Draw horizontal line and metadata text
+        icon_width = 64
+        gap = 11
         line_end_x = screen_width - margin - icon_width - gap
         draw.line((margin, divider_y, line_end_x, divider_y), fill="white")
-
-        # Draw service and quality info.
         draw.text((margin, service_y), "AirPlay Mode", font=self.font_small, fill="white")
         draw.text((margin, quality_y), quality, font=self.font_label, fill="white")
 
-        # Instead of downloading album art, use a static AirPlay icon.
-        airplay_icon = self.display_manager.icons.get("airplay")
-        if airplay_icon:
-            icon_size = (60, 60)
-            airplay_icon = airplay_icon.resize(icon_size, Image.LANCZOS)
+        # Attempt to fetch and draw album art
+        albumart_url = data.get("albumart")
+        albumart_image = None
+        if albumart_url and self.mode_manager.get_mode() == "airplay":
+            albumart_image = self.get_albumart(albumart_url)
+        icon_size = (64, 64)
+        if albumart_image:
+            albumart_image = albumart_image.resize(icon_size, Image.LANCZOS)
             art_x = screen_width - icon_size[0] - margin
             art_y = margin
-            base_image.paste(airplay_icon, (art_x, art_y))
-            
-        # GS Draw a 15x64 black box to the left of the icon to hide scrolling text (workaround)
-        box_width = 15
+            base_image.paste(albumart_image, (art_x, art_y))
+        else:
+            airplay_icon = self.display_manager.icons.get("airplay")
+            if airplay_icon:
+                airplay_icon = airplay_icon.resize(icon_size, Image.LANCZOS)
+                art_x = screen_width - icon_size[0] - margin
+                art_y = margin
+                base_image.paste(airplay_icon, (art_x, art_y))
+
+        # Mask left album art to hide text overflow
+        box_width = 11
         box_height = 64
-        box_x = art_x - box_width  # Position to the immediate left of the icon
-        box_y = art_y              # Same vertical position as the icon  
-        
+        box_x = art_x - box_width
+        box_y = art_y
         draw.rectangle(
             [box_x, box_y, box_x + box_width - 1, box_y + box_height - 1],
             fill="black"
-        )                 
+        )
 
-        # Finally, update the OLED.
+        # Push final image to display
         self.display_manager.oled.display(base_image)
         self.logger.debug("AirPlayScreen: Display updated.")
-
+    
+    # Adjust system volume based on input delta
     def adjust_volume(self, volume_change):
-        """
-        Adjust volume via an external call.
-        Emits a volume change command to Volumio.
-        """
         if not self.volumio_listener:
             self.logger.error("AirPlayScreen: No volumio_listener; cannot adjust volume.")
             return
@@ -260,9 +265,10 @@ class AirPlayScreen:
                 self.volumio_listener.socketIO.emit("volume", new_vol)
         except Exception as e:
             self.logger.error(f"AirPlayScreen: Error adjusting volume => {e}")
-
+    
+    # Toggle play/pause on Volumio
     def toggle_play_pause(self):
-        """Toggle play/pause if connected."""
+        
         self.logger.info("AirPlayScreen: Toggling play/pause.")
         if not self.volumio_listener or not self.volumio_listener.is_connected():
             self.logger.warning("AirPlayScreen: Not connected to Volumio; cannot toggle.")
@@ -273,8 +279,8 @@ class AirPlayScreen:
         except Exception as e:
             self.logger.error(f"AirPlayScreen: Toggle play/pause failed => {e}")
 
+    # Manual trigger to update display from current state
     def display_airplay_info(self):
-        """Manually refresh the display with the current state."""
         if not self.is_active:
             self.logger.info("AirPlayScreen: display_airplay_info called, but mode is not active.")
             return
