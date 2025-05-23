@@ -1,5 +1,7 @@
 # Quadify AirPlay Version +0.5a – supplementary to core build
 
+This update builds on Matt Shepherd's Quadify platform that runs on top of Volumio to provide a display and physcial control, all housed in a Quad FM4 chassis. To date, AirPlay support has been incomplete...
+
 Alterations have been made to clock in order to make AirPlay work in a more integrated way. Its behavior has been changed from threaded background operation to mode. The AirPlay status updates weren’t the issue – it was the clock scripts' enthusiasm to be a fallback if it perceived a ‘paused’ or ‘idle’ state, or blank metadata, all of which can happen at any time.
 
 The following files have seen updates (in order of logic and importance):
@@ -26,7 +28,7 @@ Assuming a fresh boot, and we’re sitting at clock or using another mode…
 
 * Switching between AirPlay apps on the controlling device is seamless and has been stress tested.  
 
-* Disconnecting device takes you to a stripped back layout, with “No Info Available” displayed. User can either: use Volumio UI to change modes, or long press the rotary encoder button to go back to clock. Mode switching from here should be normal.
+* Disconnecting AirPlay from the transmitting device takes you to a stripped back layout, with “No Info Available” displayed. User can either: use Volumio UI to change modes, or long press the rotary encoder button to go back to clock. Mode switching from here should be normal.
 
 ## New Features
 
@@ -58,9 +60,9 @@ Assuming a fresh boot, and we’re sitting at clock or using another mode…
 sudo systemctl restart shairport-sync
 ```
 
-* iOS offers much more stable metadata handling across all its apps. When transmitting global audio from a macOS device, sometimes no metadata is available. For example, using Spotify from your desktop produces no title or artist information, but it does from iOS device. We know Streaming directly from Apple Music works fine. TBC
+* iOS offers much more stable metadata handling across all its apps. Desktop platforms do not perform as consistently – i.e. when transmitting global audio from a macOS device (connecting to AirPlay via desktop Menu Bar), sometimes no metadata is available. For example, using Spotify from your desktop produces no title or artist information, but it does from iOS device. We know Streaming directly from Apple Music works fine. TBC
 
-* This is specific to me and other people who listen to BBC Radio, or have other favourite stations, but since BBC uses the 'title' field to describe station during host and news segues (Radio 2, Radio 6 etc) I am considering creating custom icons for these stations to make AirPlay feel even more rich and responsive.
+* This is specific to me and other people who listen to BBC Radio, or have other favourite stations that supply rich metadata, but since BBC uses the 'title' field to describe station during host and news segues (Radio 2, Radio 6 etc) I am considering creating custom icons for these stations to make AirPlay feel even more dynamic and responsive.
 
 # Original release notes below:
 
