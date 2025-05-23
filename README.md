@@ -1,8 +1,15 @@
-# Quadify AirPlay Version +0.5a
+# Quadify AirPlay Version +0.5a – supplementary to core build
 
 Alterations have been made to clock in order to make AirPlay work in a more integrated way. Its behavior has been changed from threaded background operation to mode. The AirPlay status updates weren’t the issue – it was the clock scripts' enthusiasm to be a fallback if it perceived a ‘paused’ or ‘idle’ state, or blank metadata, all of which can happen at any time.
 
-Now, AirPlay switches elegantly, and when streaming from an iOS device, is stable. macOS devices are generally fine, but streaming has more quirks, including missing metadata in some cases.
+The following files have seen updates (in order of logic and importance):
+
+/src/main.py
+/src/managers/mode_manager.py
+/src/display/screens/clock.py
+/src/display/screens/airplay_screen.py
+
+With these changes, AirPlay switches elegantly. When streaming from an iOS device, is stable. macOS devices are generally fine, but streaming has more quirks, including missing metadata in some cases.
 
 Think of your iOS device as a fully featured remote for online content, and Quadify as your 'now playing' display, and output to your hifi in CD quality audio.
 
@@ -31,7 +38,7 @@ Assuming a fresh boot, and we’re sitting at clock or using another mode…
 
 * ‘Airplay Mode’ prints at the bottom of screen above bitrate info instead of service ‘airport_emulation’
 
-* Spacing and layout of text has been improved and evened out. 
+* Spacing and layout of text has been improved and evened out. Icon size has been increased to full height of screen, 64x64px (I am building outside of a chassis so this might change)
 
 ## Bugs, Caveats and Improvents TBC:
 
