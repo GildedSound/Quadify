@@ -6,6 +6,8 @@ To date, AirPlay support has been incomplete. I use AirPlay as a powerful tool t
 
 ## Patch Summary
 
+IMPORTANT: I suggest you use a second SD card for this installation, and keep your stable Volumio/Quadify install safe.
+
 Alterations have been made to clock in order to make AirPlay work in a more integrated way. Clock behavior has been changed from threaded background operation to mode. The AirPlay status updates weren’t the issue – it was the clock scripts' enthusiasm to be a fallback if it perceived a ‘paused’ or ‘idle’ state, or blank metadata, all of which can happen at any time.
 
 The following files have seen updates (in order of logic and importance). Inline comments to new blocks begin with 'GS':
