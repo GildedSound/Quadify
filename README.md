@@ -36,7 +36,7 @@ cd Quadify
 sudo bash install.sh
 ```
 
-A full debug log is created on each boot/reset. I have been using this to observe mode swithcing, metadata structures and Volumio's search for image content. Watch it in real time in SSH:
+A full debug log is created on each boot/reset. I have been using this to observe mode switching, metadata structures and Volumio's search for image content. Watch it in real time in SSH:
 
 ```bash
 tail -F /tmp/quadify_debug.log
