@@ -23,7 +23,7 @@ The following files have seen updates (in order of logic and importance). Inline
 
 With these changes, AirPlay switches elegantly. When streaming from an iOS device, AirPlay mode is stable. Desktop/non-Apple/macOS devices will always stream audio, but available metadata is based on conditions, and the user will experience missing metadata in some cases (see notes for more details).
 
-To use this fork:
+To use this fork, install Volumio according to the Volumio guide. Then, when you get to the step to install Quadify:
 
 * Download source files (this repository).
 ```bash
